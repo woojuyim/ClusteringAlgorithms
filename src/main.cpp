@@ -12,10 +12,11 @@ int main(int argc, char **argv)
 {
 
     //real_2d_array xy = "[[1,1],[1,2],[4,1],[2,3],[4,1.5]]";
-    double x[6][2] = {{0,3},{3,0},{7,1},{2,2},{1,2},{2,0}};
+    double x[4][2] = {{0,3},{3,0},{7,1},{2,2}};
+    //{1,2},{2,0}};
     real_2d_array xy;
-    xy.setlength(6, 2);
-    for ( int i = 0; i < 6; i++ ){
+    xy.setlength(4, 2);
+    for ( int i = 0; i < 4; i++ ){
         for ( int j = 0; j < 2; j++ ){
             xy(i,j) = x[i][j];
         }
@@ -30,11 +31,11 @@ int main(int argc, char **argv)
     clusterizersetpoints(s, xy, 2);
     clusterizerrunahc(s, rep);
     clusterizersetahcalgo(s, 1);
-    clusterizergetkclusters(rep, 2, cidx, cz);
+    clusterizergetkclusters(rep, 3, cidx, cz);
 
     printf("%s\n", cidx.tostring().c_str()); // EXPECTED: [0,1,2,3,4]
 
-    // printf("%s\n", rep.z.tostring().c_str());
+    //printf("%s\n", rep.z.tostring().c_str());
 
     // for ( int i = 0; i < 6; i++ ){
     //     for ( int j = 0; j < 2; j++ ){
