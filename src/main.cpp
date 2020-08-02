@@ -4,21 +4,28 @@
 #include <math.h>
 #include <iostream>
 #include "dataanalysis.h"
+#include "node.h"
 
 using namespace alglib;
+using namespace std;
 
+void recursive(integer_2d_array &arr, int currIndex, Node *currNode);
+void inOrder(Node *node);
+void deleteTree(Node *node);
 
 int main(int argc, char **argv)
 {
 
     //real_2d_array xy = "[[1,1],[1,2],[4,1],[2,3],[4,1.5]]";
-    double x[4][2] = {{0,3},{3,0},{7,1},{2,2}};
+    double x[4][2] = {{0, 3}, {3, 0}, {7, 1}, {2, 2}};
     //{1,2},{2,0}};
     real_2d_array xy;
     xy.setlength(4, 2);
-    for ( int i = 0; i < 4; i++ ){
-        for ( int j = 0; j < 2; j++ ){
-            xy(i,j) = x[i][j];
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            xy(i, j) = x[i][j];
         }
     }
     clusterizerstate s;
@@ -31,11 +38,21 @@ int main(int argc, char **argv)
     clusterizersetpoints(s, xy, 2);
     clusterizerrunahc(s, rep);
     clusterizersetahcalgo(s, 1);
-    clusterizergetkclusters(rep, 3, cidx, cz);
+    //clusterizergetkclusters(rep, 3, cidx, cz);
 
-    printf("%s\n", cidx.tostring().c_str()); // EXPECTED: [0,1,2,3,4]
+    //printf("%s\n", cidx.tostring().c_str()); // EXPECTED: [0,1,2,3,4]
 
-    //printf("%s\n", rep.z.tostring().c_str());
+    printf("%s\n", rep.z.tostring().c_str());
+
+    Node *root = new Node(-1, nullptr, nullptr, nullptr);
+    recursive(rep.z, rep.z.rows() - 1, root);
+
+
+    inOrder(root);
+
+
+
+    deleteTree(root);
 
     // for ( int i = 0; i < 6; i++ ){
     //     for ( int j = 0; j < 2; j++ ){
@@ -52,4 +69,51 @@ int main(int argc, char **argv)
     return 0;
 }
 
+void inOrder(Node *node)
+{
+    if (node == nullptr)
+    {
+        return;
+    }
 
+    inOrder(node->leftChild);
+    cout << node->val;
+    inOrder(node->rightChild);
+}
+
+void deleteTree(Node *node)
+{
+    if (node == nullptr)
+    {
+        return;
+    }
+
+    deleteTree(node->leftChild);
+    deleteTree(node->rightChild);
+    delete node;
+}
+
+void recursive(integer_2d_array &arr, int currIndex, Node *currNode)
+{
+    if (currIndex < 0)
+    {
+        return;
+    }
+
+    Node *left = new Node(arr[currIndex][0], currNode, nullptr, nullptr);
+    Node *right = new Node(arr[currIndex][1], currNode, nullptr, nullptr);
+    currNode->leftChild = left;
+    currNode->rightChild = right;
+
+    //rightchild
+    if (arr[currIndex][1] > arr.rows())
+    {
+        recursive(arr, currIndex - 1, right);
+    }
+    //leftchild
+    if (arr[currIndex][0] > arr.rows())
+    {
+        recursive(arr, currIndex - 2, left);
+    }
+    
+}
