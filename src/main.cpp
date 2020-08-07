@@ -52,27 +52,39 @@ int main(int argc, char **argv)
     recursive(rep.z, rep.z.rows() - 1, root, indexes);
 
 
-    //inOrder(root);
-
-
+    inOrder(root);
     //cout << root->rightChild->rightChild->leftChild->val;
     deleteTree(root);
-
-    // for ( int i = 0; i < 6; i++ ){
-    //     for ( int j = 0; j < 2; j++ ){
-    //         xy(i,j) = rep.z[i][j];
-    //     }
-    // }
-
-    //Last item is main cluster
-    //If cluster number is > row_length, there's a cluster below
-    // for(int i = 5; i > 0; --i){
-    //     std::cout << x[i];
-    // }
-
     return 0;
 }
+void recursive(integer_2d_array &arr, int currIndex, Node *currNode, stack<int> &indexes)
+{
+    if (currIndex < 0)
+    {
+        return;
+    }
 
+    bool leftChild = arr[currIndex][0] > arr.rows();
+    bool rightChild = arr[currIndex][1] > arr.rows();
+    
+    Node *left = new Node(arr[currIndex][0], currNode, nullptr, nullptr);
+    Node *right = new Node(arr[currIndex][1], currNode, nullptr, nullptr);
+    currNode->leftChild = left;
+    currNode->rightChild = right;
+
+    //leftchild
+    if (leftChild)
+    {
+        //cout << currIndex << " ";
+        recursive(arr, currIndex - 2, left, indexes);
+    }
+    //rightchild
+    if (rightChild)
+    {
+        //cout << currIndex << " ";
+        recursive(arr, currIndex - 1, right, indexes);
+    }
+}
 void inOrder(Node *node)
 {
     if (node == nullptr)
@@ -98,30 +110,4 @@ void deleteTree(Node *node)
     delete node;
 }
 
-void recursive(integer_2d_array &arr, int currIndex, Node *currNode, stack<int> &indexes)
-{
-    if (currIndex < 0)
-    {
-        return;
-    }
 
-    bool leftChild = arr[currIndex][0] > arr.rows();
-    bool rightChild = arr[currIndex][1] > arr.rows();
-    Node *left = new Node(arr[currIndex][0], currNode, nullptr, nullptr);
-    Node *right = new Node(arr[currIndex][1], currNode, nullptr, nullptr);
-    currNode->leftChild = left;
-    currNode->rightChild = right;
-
-    //leftchild
-    if (leftChild)
-    {
-        //cout << currIndex << " ";
-        recursive(arr, currIndex - 2, left, indexes);
-    }
-    //rightchild
-    if (rightChild)
-    {
-        //cout << currIndex << " ";
-        recursive(arr, currIndex - 1, right, indexes);
-    }
-}
