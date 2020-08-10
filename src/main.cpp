@@ -12,7 +12,7 @@ using namespace alglib;
 
 void subcluster(integer_2d_array &arr, int currIndex, Node *headNode);
 void recursive(integer_2d_array &arr, int currIndex, Node *currNode);
-void inOrder(Node *node);
+void inorderTraversal(Node *node);
 void deleteTree(Node *node);
 
 
@@ -46,7 +46,6 @@ int main(int argc, char **argv)
     clusterizerrunahc(s, rep);
     clusterizersetahcalgo(s, 1);
     //clusterizergetkclusters(rep, 3, cidx, cz);
-
     //printf("%s\n", cidx.tostring().c_str());
 
     printf("%s\n", rep.z.tostring().c_str());
@@ -57,7 +56,7 @@ int main(int argc, char **argv)
 
     subcluster(rep.z, rep.z.rows() - 1, root);
 
-    inOrder(root);
+    inorderTraversal(root);
     deleteTree(root);
     return 0;
 }
@@ -68,33 +67,33 @@ int main(int argc, char **argv)
 // 3. Continue until queue is empty and arr is empty as well
 void subcluster(integer_2d_array &arr, int currIndex, Node *headNode)
 {
-    std::queue<int*> qe;
-    std::queue<Node *> listofNodes;
+    std::queue<ae_int_t*> qe;
+    std::queue<Node*> listofNodes;
     const int numofRows = arr.rows();
 
     qe.push(arr[currIndex]);
     listofNodes.push(headNode);
 
-    while(!qe.empty()){
-        int* val = qe.front();
+    while (!qe.empty()) {
+        ae_int_t* val = qe.front();
         qe.pop();
         //std::cout << "VAL:" << val[0] << " " << val[1] << std::endl;
         Node* curr = listofNodes.front();
         listofNodes.pop();
 
         Node* rightHead = new Node(val[1], curr, nullptr, nullptr);
-        Node *leftHead = new Node(val[0], curr, nullptr, nullptr);
+        Node* leftHead = new Node(val[0], curr, nullptr, nullptr);
         curr->rightChild = rightHead;
         curr->leftChild = leftHead;
 
         //Right Child has a subcluster
-        if(val[1] > numofRows){
+        if (val[1] > numofRows) {
             qe.push(arr[--currIndex]);
             listofNodes.push(rightHead);
             //std::cout << "RIGHT: " << val[1] << std::endl;
-        } 
+        }
         //Left Child has a subcluster
-        if(val[0] > numofRows){
+        if (val[0] > numofRows) {
             qe.push(arr[--currIndex]);
             listofNodes.push(leftHead);
             //std::cout << "LEFT: " << val[0] << std::endl;
@@ -133,16 +132,16 @@ void recursive(integer_2d_array &arr, int currIndex, Node *currNode)
         recursive(arr, currIndex - 1, right);
     }
 }
-void inOrder(Node *node)
+void inorderTraversal(Node *node)
 {
     if (node == nullptr)
     {
         return;
     }
 
-    inOrder(node->leftChild);
+    inorderTraversal(node->leftChild);
     std::cout << node->val << " ";
-    inOrder(node->rightChild);
+    inorderTraversal(node->rightChild);
 }
 
 void deleteTree(Node *node)
