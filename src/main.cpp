@@ -95,9 +95,6 @@ int main(int argc, char **argv)
     kclusters.push_back(kcluster1);
     kclusters.push_back(kcluster2);
    
-    print2dvector(kclusters);
-
-
 
     //Manual Subclustering
     printf("%s\n", rep.z.tostring().c_str());
@@ -111,9 +108,8 @@ int main(int argc, char **argv)
 
     sortclusters(root, 2, clusters, rep.z.rows());
 
-    print2dvector(clusters);
-
-    std::cout << compareClusters(kclusters, clusters);
+    std::cout << std::boolalpha << "Two Clusters are the same: " 
+        << compareClusters(kclusters, clusters) << std::endl;
 
 
 
