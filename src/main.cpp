@@ -8,14 +8,44 @@
 #include <stack>
 #include <queue>
 
+#include <algorithm>
+
 using namespace alglib;
 
 void subcluster(integer_2d_array &arr, int currIndex, Node *headNode);
 void recursive(integer_2d_array &arr, int currIndex, Node *currNode);
 void inorderTraversal(Node *node);
 void deleteTree(Node *node);
+void print2dvector(std::vector<std::vector<int>> &vectors);
+bool compareClusters(std::vector<std::vector<int>> &vec1, std::vector<std::vector<int>> &vec2);
+
+void getChildNodes(Node *node, std::vector<int> &cluster, int limit)
+{
+    if (node == nullptr){
+        return;
+    }
+
+    getChildNodes(node->leftChild, cluster, limit);
+    if (node->val <= limit){ 
+        cluster.push_back(node->val);
+    }
+    getChildNodes(node->rightChild, cluster, limit);
+}
+
+void sortclusters(Node* root, int numberofClusters, std::vector<std::vector<int>> &clusters, int limit) {
+    Node* left = root->leftChild;
+    Node* right = root->rightChild;
+    
+    std::vector<int> temp;
 
 
+    getChildNodes(left, temp, limit);
+    clusters.push_back(temp);
+    temp.clear();
+    getChildNodes(right, temp, limit);
+    clusters.push_back(temp);
+
+}
 int main(int argc, char **argv)
 {
     //real_2d_array xy = "[[1,1],[1,2],[4,1],[2,3],[4,1.5]]";
@@ -45,9 +75,31 @@ int main(int argc, char **argv)
     clusterizersetpoints(s, xy, 2);
     clusterizerrunahc(s, rep);
     clusterizersetahcalgo(s, 1);
-    //clusterizergetkclusters(rep, 3, cidx, cz);
-    //printf("%s\n", cidx.tostring().c_str());
 
+
+    //K Clusters
+    std::vector<std::vector<int>> kclusters;
+    std::vector<int> kcluster1;
+    std::vector<int> kcluster2;
+    clusterizergetkclusters(rep, 2, cidx, cz);
+    printf("%s\n", cidx.tostring().c_str());
+
+
+    for(int i = 0; i < cidx.length() ; ++i){ 
+        if(cidx[i] == 1){ 
+            kcluster2.push_back(i);
+        } else if(cidx[i] == 0){ 
+            kcluster1.push_back(i);
+        }
+    }
+    kclusters.push_back(kcluster1);
+    kclusters.push_back(kcluster2);
+   
+    print2dvector(kclusters);
+
+
+
+    //Manual Subclustering
     printf("%s\n", rep.z.tostring().c_str());
 
     Node *root = new Node(-1, nullptr, nullptr, nullptr);
@@ -55,11 +107,21 @@ int main(int argc, char **argv)
     //recursive(rep.z, rep.z.rows() - 1, root);
 
     subcluster(rep.z, rep.z.rows() - 1, root);
+    std::vector<std::vector<int>> clusters;
 
-    inorderTraversal(root);
+    sortclusters(root, 2, clusters, rep.z.rows());
+
+    print2dvector(clusters);
+
+    std::cout << compareClusters(kclusters, clusters);
+
+
+
+    //inorderTraversal(root);
     deleteTree(root);
     return 0;
 }
+
 
 //Use a BFS iterative method
 // 1. Input current [int, int] into queue(FIFO)
@@ -154,4 +216,31 @@ void deleteTree(Node *node)
     deleteTree(node->leftChild);
     deleteTree(node->rightChild);
     delete node;
+}
+bool compareClusters(std::vector<std::vector<int>> &vec1, std::vector<std::vector<int>> &vec2) {
+    for (auto &vec : vec1) {
+        std::sort(vec.begin(), vec.end());
+    }
+    for (auto &vec : vec2) {
+        std::sort(vec.begin(), vec.end());
+    }
+    int x = 0;
+    int y = 0;
+
+    for (int i = 0; i < vec1.size(); ++i) {
+        for (int j = 0; j < vec1[i].size(); ++j) {
+            if (vec1[i][j] != vec2[i][j]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+void print2dvector(std::vector<std::vector<int>> &vectors) {
+    for (auto vector : vectors) {
+        for (auto vec : vector) {
+            std::cout << vec << " ";
+        }
+        std::cout << std::endl;
+    }
 }
