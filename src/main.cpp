@@ -108,7 +108,9 @@ int main(int argc, char **argv)
 
     sortclusters(root, 2, clusters, rep.z.rows());
 
-    std::cout << std::boolalpha << "Two Clusters are the same: " 
+
+
+    std::cout << std::boolalpha << "Two Clusters are the same:\n" 
         << compareClusters(kclusters, clusters) << std::endl;
 
 
@@ -220,8 +222,8 @@ bool compareClusters(std::vector<std::vector<int>> &vec1, std::vector<std::vecto
     for (auto &vec : vec2) {
         std::sort(vec.begin(), vec.end());
     }
-    int x = 0;
-    int y = 0;
+    print2dvector(vec1);
+    print2dvector(vec2);
 
     for (int i = 0; i < vec1.size(); ++i) {
         for (int j = 0; j < vec1[i].size(); ++j) {
