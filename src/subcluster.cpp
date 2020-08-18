@@ -70,7 +70,7 @@ void SubClustering::run(){
     std::vector<std::vector<int>> clusters;
     std::vector<Node *> clusteredNodes;
 
-    FillClusterNodes(root, clusteredNodes, 6);
+    FillClusterNodes(root, clusteredNodes, 3);
 
     nodesIntoClusters(clusteredNodes, clusters, rep.z.rows());
 
@@ -82,7 +82,6 @@ void SubClustering::run(){
     //inorderTraversal(root);
 
     print2dvector(clusters);
-
     deleteTree(root);
 }
 
@@ -101,7 +100,7 @@ int SubClustering::calcLeafNodesNum(Node *node)
 
 void SubClustering::FillClusterNodes(Node *root, std::vector<Node*> &clusteredNodes, int limit)
 {
-    if (root->numofLeafChilds < limit)
+    if (root->numofLeafChilds <= limit)
     {
         clusteredNodes.push_back(root);
         return;
